@@ -1,0 +1,122 @@
+[tool.poetry]
+name = "talk-to-your-cookbook-backend"
+version = "0.1.0"
+description = "Backend for the talk-to-your-cookbook app"
+authors = ["Dominik Lindner <docachaorg@gmail.com>"]
+license = "MIT"
+packages = [{ include = "app", from = "backend" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+# Core dependencies
+fastapi = "^0.115.13"
+uvicorn = { extras = ["standard"], version = "^0.29.0" }
+pydantic = { version = "^2.7", extras = ["email"] }
+httpx = "^0.28.1"
+
+# DB
+sqlalchemy = "^2.0"
+asyncpg = "^0.30.0"
+python-jose = "^3.5.0"
+pydantic-settings = "^2.10.1"
+pgvector = "^0.3.2"
+python-multipart = "^0.0.20"
+requests = "^2.32.4"
+openai = "^1.91.0"
+passlib = "^1.7.4"
+langgraph = "^1.0.3"
+sqlalchemy-to-pydantic = "^0.0.8"
+pillow = "^11.3.0"
+aiofiles = "^24.1.0"
+async-asgi-testclient = "^1.4.11"
+pytesseract = "^0.3.13"
+mistralai = "^1.9.3"
+psycopg = "^3.2.10"
+postgres = "^4.0"
+langchain = "^1.1.0"
+langchain-text-splitters = "^1.0.0"
+langchain-postgres = "^0.0.16"
+langgraph-checkpoint-postgres = "^3.0.1"
+langchain-ollama = "^1.0.0"
+langchain-openai = "^1.1.0"
+langchain-mistralai = "^1.1.0"
+transformers = "4.57.2"
+#torch = {version = "2.2.2+cu118", source = "pytorch-cu118"}
+#torchvision = {version = "0.17.2+cu118", source = "pytorch-cu118"}
+sentence-transformers = "5.1.2"
+huggingface-hub = "0.36.0"
+numpy="1.26.3"
+
+
+
+
+[tool.poetry.group.dev.dependencies]
+# Testing
+pytest = "^8.4.1"
+pytest-asyncio = "^0.23"
+pytest-cov = "^6.2.1"
+pytest-mock = "^3.12"
+asgi-lifespan = "^2.1.0"
+aiosqlite = "^0.21.0"
+pre-commit = "^4.2.0"
+poethepoet = "^0.35.0"
+black = "^25.1.0"
+ruff = "^0.12.0"
+isort = "^6.0.1"
+mypy = "^1.10"
+eralchemy = "^1.6.0"
+mkdocs-material = "^9.7.0"
+markdown-include = "^0.8.1"
+
+testcontainers = {extras = ["postgresql"], version = "^4.7"}
+
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+addopts = ""
+testpaths = ["backend/tests/"]
+markers = [
+  "unit: fast lightweight tests without db",
+  "integration: fast lightweight tests using in-memory SQLite",
+  "system: spins up the full FastAPI app with Postgres/testcontainers, workers, queues, storage (deselect with -m 'not system')",
+  "asyncio: mark test as relying on asyncio event loop",
+]
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+
+[tool.isort]
+profile = "black"
+line_length = 120
+known_first_party = ["app"]
+multi_line_output = 3
+
+[tool.mypy]
+strict = true
+ignore_missing_imports = true
+files = "backend/app"
+
+[tool.ruff]
+line-length = 120
+lint.ignore = ["I", "B008"]
+lint.select = ["E", "F", "B"]
+
+[tool.poe.tasks]
+format = { shell = "black . && isort ." }
+lint = { shell = "ruff check ." }
+test = { shell = "pytest" }
+check = { shell = "poe format && poe lint && poe test" }
+
+
+[[tool.poetry.source]]
+name = "pytorch-cu118"
+url = "https://download.pytorch.org/whl/cu118"
+priority = "supplemental"
