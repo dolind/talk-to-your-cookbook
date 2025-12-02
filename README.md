@@ -1,8 +1,7 @@
 # Talk To Your Cookbook
 ![CI](https://github.com/dolind/talk-to-your-cookbook/actions/workflows/backend.yml/badge.svg)
-![Docs](https://github.com/dolind/talk-to-your-cookbook/actions/workflows/docs.yml/badge.svg?branch=master)
+![Docs](https://github.com/dolind/talk-to-your-cookbook/actions/workflows/docs.yml/badge.svg?branch=main)
 ![Coverage](https://github.com/dolind/talk-to-your-cookbook/blob/coverage/coverage.svg)
-![License](https://img.shields.io/github/license/dolind/talk-to-your-cookbook)
 
 ## Why? AI Architecture Pattern Demonstrator
 
