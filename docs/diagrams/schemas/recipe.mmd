@@ -1,0 +1,230 @@
+classDiagram
+
+    class RecipeBase {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientCreate] | None = list
+        instructions: list[RecipeInstructionCreate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+    }
+
+    class RecipeCreate {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientCreate] | None = list
+        instructions: list[RecipeInstructionCreate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+    }
+
+    class RecipeDeleteRequest {
+        ids: list[str]
+    }
+
+    class RecipeFilterOptions {
+        categories: list[str]
+        sources: list[str]
+    }
+
+    class RecipeIngredientBase {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class RecipeIngredientCreate {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class RecipeIngredientRead {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+        id: str
+        recipe_id: str
+        order: int
+    }
+
+    class RecipeIngredientUpdate {
+        name: str | None
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class RecipeInstructionBase {
+        step: int
+        instruction: str
+    }
+
+    class RecipeInstructionCreate {
+        step: int
+        instruction: str
+    }
+
+    class RecipeInstructionRead {
+        step: int
+        instruction: str
+    }
+
+    class RecipeInstructionUpdate {
+        step: int = None
+        instruction: str = None
+    }
+
+    class RecipeNutritionBase {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+    }
+
+    class RecipeNutritionCreate {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+    }
+
+    class RecipeNutritionRead {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+        id: str
+        recipe_id: str
+    }
+
+    class RecipeNutritionUpdate {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+    }
+
+    class RecipePage {
+        items: list[RecipeRead]
+        total: int | None = None
+        skip: int | None = None
+        limit: int | None = None
+        hasMore: bool | None = None
+    }
+
+    class RecipeRead {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientRead] = []
+        instructions: list[RecipeInstructionRead]
+        nutrition: RecipeNutritionRead | None = None
+        id: str
+        created_at: datetime
+        updated_at: datetime | None = None
+    }
+
+    class RecipeSearchParams {
+        search_term: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        max_prep_time: int | None = None
+        min_calories: float | None = None
+        max_calories: float | None = None
+        sort_by: str | None = 'created_at'
+        sort_asc: bool | None = False
+    }
+
+    class RecipeUpdate {
+        title: str | None = None
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientUpdate] | None = list
+        instructions: list[RecipeInstructionUpdate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+        delete_image: bool | None = None
+    }
+
+    RecipeBase ..> RecipeIngredientCreate
+    RecipeBase ..> RecipeInstructionCreate
+    RecipeBase ..> RecipeNutritionBase
+    RecipeCreate ..> RecipeIngredientCreate
+    RecipeCreate ..> RecipeInstructionCreate
+    RecipeCreate ..> RecipeNutritionBase
+    RecipeNutritionBase ..> Any
+    RecipeNutritionCreate ..> Any
+    RecipeNutritionRead ..> Any
+    RecipeNutritionUpdate ..> Any
+    RecipePage ..> RecipeRead
+    RecipeRead ..> RecipeIngredientRead
+    RecipeRead ..> RecipeInstructionRead
+    RecipeRead ..> RecipeNutritionRead
+    RecipeRead ..> datetime
+    RecipeUpdate ..> RecipeIngredientUpdate
+    RecipeUpdate ..> RecipeInstructionUpdate
+    RecipeUpdate ..> RecipeNutritionBase
+

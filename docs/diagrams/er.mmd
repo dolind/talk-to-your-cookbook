@@ -1,0 +1,196 @@
+erDiagram
+    book_scans {
+        VARCHAR id
+        VARCHAR title
+        VARCHAR user_id
+    }
+
+    chat_messages {
+        TEXT content
+        DATETIME created_at
+        VARCHAR id
+        TEXT meta_data
+        VARCHAR(9) role
+        VARCHAR session_id
+    }
+
+    chat_sessions {
+        DATETIME created_at
+        VARCHAR id
+        VARCHAR thread_id
+        VARCHAR title
+        DATETIME updated_at
+        VARCHAR user_id
+    }
+
+    classification_records {
+        BOOLEAN approved
+        VARCHAR book_scan_id
+        DATETIME created_at
+        VARCHAR error_message
+        VARCHAR id
+        JSON pages
+        VARCHAR recipe_id
+        VARCHAR(15) status
+        VARCHAR thumbnail_path
+        VARCHAR title
+        DATETIME updated_at
+        JSON validation_result
+    }
+
+    images {
+        VARCHAR book_scan_id
+        VARCHAR filename
+        VARCHAR id
+        VARCHAR ocr_path
+        INTEGER page_number
+        VARCHAR(5) page_type
+        JSON recipe_areas
+        DATETIME scan_date
+        VARCHAR(12) status
+        VARCHAR title
+    }
+
+    meal_plan_days {
+        DATE date
+        VARCHAR id
+        VARCHAR meal_plan_id
+        TEXT notes
+    }
+
+    meal_plan_items {
+        VARCHAR day_id
+        VARCHAR id
+        VARCHAR(9) meal_type
+        TEXT notes
+        VARCHAR recipe_id
+        INTEGER servings
+    }
+
+    meal_plans {
+        DATETIME created_at
+        TEXT description
+        DATE end_date
+        VARCHAR id
+        VARCHAR name
+        DATE start_date
+        DATETIME updated_at
+        VARCHAR user_id
+    }
+
+    recent_recipes {
+        DATETIME created_at
+        VARCHAR id
+        VARCHAR recipe_id
+        DATE used_on
+        VARCHAR user_id
+    }
+
+    recipe_ingredients {
+        VARCHAR id
+        VARCHAR name
+        VARCHAR notes
+        SMALLINT order
+        VARCHAR preparation
+        VARCHAR quantity
+        VARCHAR recipe_id
+        VARCHAR unit
+    }
+
+    recipe_instructions {
+        VARCHAR id
+        TEXT instruction
+        VARCHAR recipe_id
+        SMALLINT step
+    }
+
+    recipe_nutrition {
+        TEXT additional_data
+        FLOAT calories
+        FLOAT carbohydrates
+        FLOAT fat
+        FLOAT fiber
+        VARCHAR id
+        FLOAT protein
+        VARCHAR recipe_id
+        FLOAT sodium
+        FLOAT sugar
+    }
+
+    recipes {
+        JSON categories
+        INTEGER cook_time
+        DATETIME created_at
+        TEXT description
+        VARCHAR difficulty
+        VARCHAR id
+        VARCHAR image_url
+        BOOLEAN is_public
+        TEXT notes
+        INTEGER prep_time
+        SMALLINT rating
+        SMALLINT servings
+        VARCHAR source
+        VARCHAR source_url
+        JSON tags
+        VARCHAR title
+        DATETIME updated_at
+        VARCHAR user_id
+    }
+
+    shopping_list_items {
+        BOOLEAN checked
+        VARCHAR id
+        VARCHAR ingredient_name
+        VARCHAR meal_plan_day
+        VARCHAR meal_plan_id
+        VARCHAR(9) meal_type
+        TEXT note
+        FLOAT quantity
+        VARCHAR recipe_id
+        VARCHAR shopping_list_id
+        VARCHAR unit
+    }
+
+    shopping_lists {
+        DATETIME created_at
+        VARCHAR id
+        VARCHAR name
+        VARCHAR owner_id
+    }
+
+    users {
+        TEXT allergens
+        DATETIME created_at
+        TEXT dietary_preferences
+        VARCHAR email
+        VARCHAR first_name
+        VARCHAR hashed_password
+        VARCHAR id
+        BOOLEAN is_active
+        BOOLEAN is_admin
+        VARCHAR last_name
+        TEXT nutrition_targets
+        DATETIME updated_at
+    }
+
+    book_scans ||--o{ classification_records : foreign_key
+    book_scans ||--o{ images : foreign_key
+    chat_sessions ||--o{ chat_messages : foreign_key
+    meal_plan_days ||--o{ meal_plan_items : foreign_key
+    meal_plans ||--o{ meal_plan_days : foreign_key
+    meal_plans ||--o{ shopping_list_items : foreign_key
+    recipes ||--o{ classification_records : foreign_key
+    recipes ||--o{ meal_plan_items : foreign_key
+    recipes ||--o{ recent_recipes : foreign_key
+    recipes ||--o{ recipe_ingredients : foreign_key
+    recipes ||--o{ recipe_instructions : foreign_key
+    recipes ||--o{ recipe_nutrition : foreign_key
+    recipes ||--o{ shopping_list_items : foreign_key
+    shopping_lists ||--o{ shopping_list_items : foreign_key
+    users ||--o{ book_scans : foreign_key
+    users ||--o{ chat_sessions : foreign_key
+    users ||--o{ meal_plans : foreign_key
+    users ||--o{ recent_recipes : foreign_key
+    users ||--o{ recipes : foreign_key
+    users ||--o{ shopping_lists : foreign_key

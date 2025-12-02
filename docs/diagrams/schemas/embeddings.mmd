@@ -1,0 +1,22 @@
+classDiagram
+
+    class EmbeddingJob {
+        recipe_id: str
+        user_id: str
+        targets: Sequence[Literal['local_bge', 'mistralai']] | None = None
+        reindex: bool = False
+        version: str | None = None
+    }
+
+    class EmbeddingsConfig {
+        targets: dict[str, TargetConfig] = <lambda>
+    }
+
+    class TargetConfig {
+        target: str
+        active_version: str = 'v1'
+        staged_version: str | None = None
+    }
+
+    EmbeddingsConfig ..> TargetConfig
+

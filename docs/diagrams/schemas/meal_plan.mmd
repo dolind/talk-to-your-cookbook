@@ -1,0 +1,124 @@
+classDiagram
+
+    class MealPlanBase {
+        name: str
+        description: str | None = None
+        start_date: date
+        end_date: date
+    }
+
+    class MealPlanCreate {
+        name: str
+        description: str | None = None
+        start_date: date
+        end_date: date
+        days: list[MealPlanDayCreate] = []
+    }
+
+    class MealPlanDayBase {
+        date: date
+        notes: str | None = None
+    }
+
+    class MealPlanDayCreate {
+        date: date
+        notes: str | None = None
+        items: list[MealPlanItemCreate] = []
+    }
+
+    class MealPlanDayRead {
+        date: date
+        notes: str | None = None
+        id: str
+        meal_plan_id: str
+        items: list[MealPlanItemRead] = []
+    }
+
+    class MealPlanDayUpdate {
+        date: date
+        notes: str | None = None
+        items: list[MealPlanItemUpdate] = []
+    }
+
+    class MealPlanItemBase {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+    }
+
+    class MealPlanItemCreate {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+    }
+
+    class MealPlanItemRead {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+        id: str
+        day_id: str
+    }
+
+    class MealPlanItemUpdate {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+    }
+
+    class MealPlanPage {
+        items: list[MealPlanRead]
+        total: int
+        skip: int
+        limit: int
+    }
+
+    class MealPlanRead {
+        name: str
+        description: str | None = None
+        start_date: date
+        end_date: date
+        id: str
+        user_id: str
+        created_at: datetime
+        updated_at: datetime | None = None
+        days: list[MealPlanDayRead] = []
+    }
+
+    class MealPlanUpdate {
+        name: str | None = None
+        description: str | None = None
+        start_date: date | None = None
+        end_date: date | None = None
+        days: list[MealPlanDayUpdate] | None = None
+    }
+
+    MealPlanBase ..> date
+    MealPlanCreate ..> MealPlanDayCreate
+    MealPlanCreate ..> date
+    MealPlanDayBase ..> date
+    MealPlanDayCreate ..> MealPlanItemCreate
+    MealPlanDayCreate ..> date
+    MealPlanDayRead ..> MealPlanItemRead
+    MealPlanDayRead ..> date
+    MealPlanDayUpdate ..> MealPlanItemUpdate
+    MealPlanDayUpdate ..> date
+    MealPlanItemBase ..> MealType
+    MealPlanItemCreate ..> MealType
+    MealPlanItemRead ..> MealType
+    MealPlanItemUpdate ..> MealType
+    MealPlanPage ..> MealPlanRead
+    MealPlanRead ..> MealPlanDayRead
+    MealPlanRead ..> date
+    MealPlanRead ..> datetime
+    MealPlanUpdate ..> MealPlanDayUpdate
+    MealPlanUpdate ..> date
+

@@ -1,0 +1,891 @@
+classDiagram
+
+
+    class ChatSessionResponse {
+        title: str | None = None
+        namespace: str | None = None
+        id: str
+        thread_id: str
+        created_at: datetime
+        messages: list[ChatMessageResponse] = []
+    }
+
+    class ChatState {
+        messages: list[BaseMessage]
+        selected_recipe_id: str | None
+        user_id: str
+    }
+
+    class ChatMessageCreate {
+        content: str
+    }
+
+    class ChatMessageBase {
+        content: str
+    }
+
+    class MessageRole {
+        <<Enumeration>>
+        user: str = 'user'
+        assistant: str = 'assistant'
+        system: str = 'system'
+    }
+
+    class BaseMessage {
+        content: str | list[str | dict]
+        additional_kwargs: dict = dict
+        response_metadata: dict = dict
+        type: str
+        name: str | None = None
+        id: str | None = None
+    }
+
+    class ChatMessageResponse {
+        content: str
+        id: str
+        session_id: str
+        role: MessageRole
+        created_at: datetime
+    }
+
+    class ChatSessionListResponse {
+        items: list[ChatSessionResponse]
+        total: int
+        skip: int
+        limit: int
+    }
+
+    class ChatSessionCreate {
+        title: str | None = None
+        namespace: str | None = None
+    }
+
+    class ChatSessionBase {
+        title: str | None = None
+        namespace: str | None = None
+    }
+
+    BaseMessage ..> dict
+    ChatMessageResponse ..> MessageRole
+    ChatMessageResponse ..> datetime
+    ChatSessionResponse ..> ChatMessageResponse
+    ChatSessionResponse ..> datetime
+    ChatSessionListResponse ..> ChatSessionResponse
+    ChatState ..> BaseMessage
+
+
+
+    class EmbeddingsConfig {
+        targets: dict[str, TargetConfig] = <lambda>
+    }
+
+    class TargetConfig {
+        target: str
+        active_version: str = 'v1'
+        staged_version: str | None = None
+    }
+
+    class EmbeddingJob {
+        recipe_id: str
+        user_id: str
+        targets: Sequence[Literal['local_bge', 'mistralai']] | None = None
+        reindex: bool = False
+        version: str | None = None
+    }
+
+    EmbeddingsConfig ..> TargetConfig
+
+
+
+    class PageScanRead {
+        filename: str
+        bookScanID: str
+        id: str
+        page_number: int
+        scanDate: datetime
+        ocr_path: str | None = None
+        title: str | None = None
+        page_segments: list[SegmentationSegment] | None = None
+        segmentation_done: bool | None = False
+        page_type: PageType | None = None
+        status: PageStatus | None = PageStatus.QUEUED
+    }
+
+    class BookScanRead {
+        title: str
+        id: str
+        imageIds: list[str] | None = None
+        user_id: str | None = None
+    }
+
+    class SegmentationSegment {
+        id: int
+        title: str
+        bounding_boxes: list[list[dict[str, int]]]
+        associated_ocr_blocks: list[int]
+    }
+
+    PageScanRead ..> PageType
+    PageScanRead ..> PageStatus
+    PageScanRead ..> datetime
+    PageScanRead ..> SegmentationSegment
+
+
+
+    class MealPlanDayUpdate {
+        date: date
+        notes: str | None = None
+        items: list[MealPlanItemUpdate] = []
+    }
+
+    class MealPlanDayCreate {
+        date: date
+        notes: str | None = None
+        items: list[MealPlanItemCreate] = []
+    }
+
+    class MealPlanDayBase {
+        date: date
+        notes: str | None = None
+    }
+
+    class MealPlanRead {
+        name: str
+        description: str | None = None
+        start_date: date
+        end_date: date
+        id: str
+        user_id: str
+        created_at: datetime
+        updated_at: datetime | None = None
+        days: list[MealPlanDayRead] = []
+    }
+
+    class MealType {
+        <<Enumeration>>
+        breakfast: str = 'breakfast'
+        lunch: str = 'lunch'
+        dinner: str = 'dinner'
+        snack: str = 'snack'
+    }
+
+    class MealPlanItemCreate {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+    }
+
+    class MealPlanDayRead {
+        date: date
+        notes: str | None = None
+        id: str
+        meal_plan_id: str
+        items: list[MealPlanItemRead] = []
+    }
+
+    class MealPlanCreate {
+        name: str
+        description: str | None = None
+        start_date: date
+        end_date: date
+        days: list[MealPlanDayCreate] = []
+    }
+
+    class MealPlanUpdate {
+        name: str | None = None
+        description: str | None = None
+        start_date: date | None = None
+        end_date: date | None = None
+        days: list[MealPlanDayUpdate] | None = None
+    }
+
+    class MealPlanItemRead {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+        id: str
+        day_id: str
+    }
+
+    class MealPlanItemUpdate {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+    }
+
+    class MealPlanPage {
+        items: list[MealPlanRead]
+        total: int
+        skip: int
+        limit: int
+    }
+
+    class MealPlanItemBase {
+        recipe_id: str | None = None
+        recipe_name: str | None = None
+        meal_type: MealType
+        servings: int | None = 1
+        notes: str | None = None
+    }
+
+    class MealPlanBase {
+        name: str
+        description: str | None = None
+        start_date: date
+        end_date: date
+    }
+
+    MealPlanItemBase ..> MealType
+    MealPlanItemCreate ..> MealType
+    MealPlanItemUpdate ..> MealType
+    MealPlanItemRead ..> MealType
+    MealPlanDayBase ..> date
+    MealPlanDayCreate ..> date
+    MealPlanDayCreate ..> MealPlanItemCreate
+    MealPlanDayUpdate ..> date
+    MealPlanDayUpdate ..> MealPlanItemUpdate
+    MealPlanDayRead ..> date
+    MealPlanDayRead ..> MealPlanItemRead
+    MealPlanBase ..> date
+    MealPlanCreate ..> date
+    MealPlanCreate ..> MealPlanDayCreate
+    MealPlanUpdate ..> MealPlanDayUpdate
+    MealPlanUpdate ..> date
+    MealPlanRead ..> date
+    MealPlanRead ..> datetime
+    MealPlanRead ..> MealPlanDayRead
+    MealPlanPage ..> MealPlanRead
+
+
+
+    class BookScanRead {
+        title: str
+        id: str
+        imageIds: list[str] | None = None
+        user_id: str | None = None
+    }
+
+    class ClassificationRecordRead {
+        id: str
+        book_scan_id: str
+        recipe_id: str | None = None
+        title: str | None = None
+        thumbnail_path: str | None = None
+        status: RecordStatus = RecordStatus.QUEUED
+        approved: bool = False
+        text_pages: list[Page]
+        image_pages: list[Page]
+        validation_result: RecipeCreate | None = None
+        created_at: datetime
+        updated_at: datetime
+        error_message: str | None = None
+    }
+
+    class ClassificationRecordCreate {
+        book_scan_id: str
+    }
+
+    class SegmentationGraphState {
+        page_record_id: str
+        ocr_result: OCRResult
+        segmentation: SegmentationResult | None = None
+    }
+
+    class PageType {
+        <<Enumeration>>
+        IMAGE: str = 'image'
+        TEXT: str = 'text'
+    }
+
+    class PageStatus {
+        <<Enumeration>>
+        QUEUED: str = 'QUEUED'
+        OCR_DONE: str = 'OCR_DONE'
+        NEEDS_REVIEW: str = 'NEEDS_REVIEW'
+        APPROVED: str = 'APPROVED'
+        FAILED: str = 'failed'
+    }
+
+    class SegmentationSegment {
+        id: int
+        title: str
+        bounding_boxes: list[list[dict[str, int]]]
+        associated_ocr_blocks: list[int]
+    }
+
+    class GroupApproval {
+        phase: Literal['group'] = 'group'
+        approved: bool = True
+        new_group: list[Page] | None = None
+    }
+
+    class RecipeApproval {
+        phase: Literal['recipe'] = 'recipe'
+        approved: bool = True
+        recipe: RecipeCreate | None = None
+    }
+
+    class ClassificationGraphState {
+        classification_record_id: str | None = None
+        book_scan_id: str | None = None
+        text_pages: list[PageScanRead] | None = None
+        image_pages: list[PageScanRead] | None = None
+        input_pages: list[ClassificationRecordInputPage] | None = None
+        llm_candidate: dict[] | None = None
+        thumbnail_path: str | None = None
+        first_pass_validation: bool = False
+        current_recipe_state: RecipeCreate | None = None
+        taxonomy_user_approved: dict | None = None
+    }
+
+    class RecipeCreate {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientCreate] | None = list
+        instructions: list[RecipeInstructionCreate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+    }
+
+    class PageScanCreate {
+        filename: str
+        bookScanID: str
+    }
+
+    class IngredientOut {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class BookScanCreate {
+        title: str
+    }
+
+    class SegmentationApproval {
+        approved: bool = True
+        segmentation: SegmentationResult | None = None
+    }
+
+    class OCRResult {
+        page_id: str
+        full_text: str
+        blocks: list[dict[str, Any]]
+    }
+
+    class BookScanUpdate {
+        title: str | None = None
+    }
+
+    class RecordStatus {
+        <<Enumeration>>
+        QUEUED: str = 'QUEUED'
+        REVIEW_GROUPING: str = 'REVIEW_GROUPING'
+        NEEDS_REVIEW: str = 'NEEDS_REVIEW'
+        NEEDS_TAXONOMY: str = 'NEEDS_TAXONOMY'
+        APPROVED: str = 'APPROVED'
+    }
+
+    class Page {
+        id: str
+        page_number: int | None = None
+    }
+
+    class PageScanRead {
+        filename: str
+        bookScanID: str
+        id: str
+        page_number: int
+        scanDate: datetime
+        ocr_path: str | None = None
+        title: str | None = None
+        page_segments: list[SegmentationSegment] | None = None
+        segmentation_done: bool | None = False
+        page_type: PageType | None = None
+        status: PageStatus | None = PageStatus.QUEUED
+    }
+
+    class GraphBroadCast {
+        type: str
+        id: str
+        status: PageStatus | RecordStatus
+    }
+
+    class RecipeLLMOut {
+        title: str
+        description: str | None = None
+        ingredients: list[IngredientOut] = list
+        instructions: list[str] = list
+        prep_time: str | None = None
+        cook_time: str | None = None
+        servings: str | None = None
+        notes: str | None = None
+    }
+
+    class ClassificationRecordInputPage {
+        original_id: str
+        page_number: int
+        ocr_path: str | None = None
+        title: str | None = None
+        segmentation_done: bool | None = False
+        relevant_segment: SegmentationSegment | None = None
+        page_type: PageType | None = None
+    }
+
+    class TaxonomyApproval {
+        phase: Literal['taxonomy'] = 'taxonomy'
+        approved: bool = True
+        categories: list[str] | None = None
+        tags: list[str] | None = None
+    }
+
+    class SegmentationResult {
+        segmentation_done: bool = False
+        page_segments: list[SegmentationSegment] | None = None
+    }
+
+    class ApprovedTaxonomyResult {
+        approved: bool = True
+        categories: list[str] = list
+        tags: list[str] = list
+    }
+
+    class PageScanUpdate {
+        id: str
+        filename: str | None = None
+        bookScanID: str | None = None
+        page_number: int | None = None
+        scanDate: datetime = None
+        ocr_path: str | None = None
+        title: str | None = None
+        page_segments: list[SegmentationSegment] | None = None
+        segmentation_done: bool | None = False
+        status: PageStatus | None = None
+        page_type: PageType | None = None
+    }
+
+    class ClassificationRecordUpdate {
+        id: str
+        recipe_id: str | None = None
+        title: str | None = None
+        thumbnail_path: str | None = None
+        status: RecordStatus | None = None
+        approved: bool | None = None
+        text_pages: list[Page] | None = None
+        image_pages: list[Page] | None = None
+        validation_result: RecipeCreate | None = None
+    }
+
+    RecipeCreate ..> RecipeInstructionCreate
+    RecipeCreate ..> RecipeIngredientCreate
+    RecipeCreate ..> RecipeNutritionBase
+    OCRResult ..> Any
+    SegmentationResult ..> SegmentationSegment
+    SegmentationApproval ..> SegmentationResult
+    PageScanRead ..> PageType
+    PageScanRead ..> PageStatus
+    PageScanRead ..> datetime
+    PageScanRead ..> SegmentationSegment
+    PageScanUpdate ..> PageType
+    PageScanUpdate ..> PageStatus
+    PageScanUpdate ..> datetime
+    PageScanUpdate ..> SegmentationSegment
+    SegmentationGraphState ..> SegmentationResult
+    SegmentationGraphState ..> OCRResult
+    ClassificationRecordInputPage ..> PageType
+    ClassificationRecordInputPage ..> SegmentationSegment
+    GraphBroadCast ..> RecordStatus
+    GraphBroadCast ..> PageStatus
+    ClassificationRecordUpdate ..> RecordStatus
+    ClassificationRecordUpdate ..> RecipeCreate
+    ClassificationRecordUpdate ..> Page
+    ClassificationRecordRead ..> RecordStatus
+    ClassificationRecordRead ..> RecipeCreate
+    ClassificationRecordRead ..> datetime
+    ClassificationRecordRead ..> Page
+    GroupApproval ..> Page
+    RecipeApproval ..> RecipeCreate
+    ClassificationGraphState ..> PageScanRead
+    ClassificationGraphState ..> dict
+    ClassificationGraphState ..> RecipeCreate
+    ClassificationGraphState ..> ClassificationRecordInputPage
+    RecipeLLMOut ..> IngredientOut
+
+
+
+    class RecipeNutritionRead {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+        id: str
+        recipe_id: str
+    }
+
+    class RecipeUpdate {
+        title: str | None = None
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientUpdate] | None = list
+        instructions: list[RecipeInstructionUpdate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+        delete_image: bool | None = None
+    }
+
+    class RecipeInstructionRead {
+        step: int
+        instruction: str
+    }
+
+    class RecipeNutritionUpdate {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+    }
+
+    class RecipeRead {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientRead] = []
+        instructions: list[RecipeInstructionRead]
+        nutrition: RecipeNutritionRead | None = None
+        id: str
+        created_at: datetime
+        updated_at: datetime | None = None
+    }
+
+    class RecipeNutritionCreate {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+    }
+
+    class RecipeSearchParams {
+        search_term: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        max_prep_time: int | None = None
+        min_calories: float | None = None
+        max_calories: float | None = None
+        sort_by: str | None = 'created_at'
+        sort_asc: bool | None = False
+    }
+
+    class RecipeInstructionUpdate {
+        step: int = None
+        instruction: str = None
+    }
+
+    class RecipePage {
+        items: list[RecipeRead]
+        total: int | None = None
+        skip: int | None = None
+        limit: int | None = None
+        hasMore: bool | None = None
+    }
+
+    class RecipeIngredientRead {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+        id: str
+        recipe_id: str
+        order: int
+    }
+
+    class RecipeIngredientCreate {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class RecipeCreate {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientCreate] | None = list
+        instructions: list[RecipeInstructionCreate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+    }
+
+    class RecipeFilterOptions {
+        categories: list[str]
+        sources: list[str]
+    }
+
+    class RecipeIngredientBase {
+        name: str
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class RecipeIngredientUpdate {
+        name: str | None
+        quantity: str | None = None
+        unit: str | None = None
+        preparation: str | None = None
+    }
+
+    class RecipeNutritionBase {
+        calories: float | None = None
+        protein: float | None = None
+        carbohydrates: float | None = None
+        fat: float | None = None
+        fiber: float | None = None
+        sugar: float | None = None
+        sodium: float | None = None
+        additional_data: dict[str, Any] | None = None
+    }
+
+    class RecipeBase {
+        title: str
+        description: str | None = None
+        prep_time: int | None = None
+        cook_time: int | None = None
+        servings: int | None = None
+        image_url: str | None = None
+        source: str | None = None
+        source_url: str | None = None
+        categories: list[str] | None = list
+        tags: list[str] | None = list
+        difficulty: str | None = None
+        notes: str | None = None
+        rating: int | None = None
+        nutritional_info: str | None = None
+        ingredients: list[RecipeIngredientCreate] | None = list
+        instructions: list[RecipeInstructionCreate] | None = list
+        nutrition: RecipeNutritionBase | None = None
+    }
+
+    class RecipeDeleteRequest {
+        ids: list[str]
+    }
+
+    class RecipeInstructionCreate {
+        step: int
+        instruction: str
+    }
+
+    class RecipeInstructionBase {
+        step: int
+        instruction: str
+    }
+
+    RecipeNutritionBase ..> Any
+    RecipeNutritionCreate ..> Any
+    RecipeNutritionUpdate ..> Any
+    RecipeNutritionRead ..> Any
+    RecipeBase ..> RecipeInstructionCreate
+    RecipeBase ..> RecipeIngredientCreate
+    RecipeBase ..> RecipeNutritionBase
+    RecipeCreate ..> RecipeInstructionCreate
+    RecipeCreate ..> RecipeIngredientCreate
+    RecipeCreate ..> RecipeNutritionBase
+    RecipeUpdate ..> RecipeInstructionUpdate
+    RecipeUpdate ..> RecipeIngredientUpdate
+    RecipeUpdate ..> RecipeNutritionBase
+    RecipeRead ..> RecipeNutritionRead
+    RecipeRead ..> RecipeInstructionRead
+    RecipeRead ..> RecipeIngredientRead
+    RecipeRead ..> datetime
+    RecipePage ..> RecipeRead
+
+
+
+    class ShoppingListRead {
+        items: list[ShoppingListItemRead]
+        imported_recipes: list[ImportedRecipe] = []
+        imported_meal_plans: list[ImportedMealPlan] = []
+    }
+
+    class ShoppingListItemUpdate {
+        ingredient_name: str | None = None
+        quantity: float | None = None
+        unit: str | None = None
+        checked: bool | None = None
+    }
+
+    class ShoppingListItemRead {
+        ingredient_name: str
+        quantity: float | None = None
+        unit: str | None = None
+        id: str
+        recipe_title: str | None = None
+        checked: bool | None = None
+        recipe_id: str | None = None
+        note: str | None = None
+        meal_plan_id: str | None = None
+        meal_plan_day: date | None = None
+        meal_plan_name: str | None = None
+        meal_type: MealType | None = None
+    }
+
+    class ImportedMealPlan {
+        meal_plan_id: str
+        name: str
+    }
+
+    class MealType {
+        <<Enumeration>>
+        breakfast: str = 'breakfast'
+        lunch: str = 'lunch'
+        dinner: str = 'dinner'
+        snack: str = 'snack'
+    }
+
+    class ShoppingListItemBase {
+        ingredient_name: str
+        quantity: float | None = None
+        unit: str | None = None
+    }
+
+    class ShoppingListItemCreate {
+        ingredient_name: str
+        quantity: float | None = None
+        unit: str | None = None
+    }
+
+    class ImportedRecipe {
+        recipe_id: str
+        title: str
+    }
+
+    ShoppingListItemRead ..> date
+    ShoppingListItemRead ..> MealType
+    ShoppingListRead ..> ShoppingListItemRead
+    ShoppingListRead ..> ImportedRecipe
+    ShoppingListRead ..> ImportedMealPlan
+
+
+
+    class RefreshRequest {
+        refresh_token: str
+    }
+
+    class Token {
+        access_token: str
+        token_type: str
+        refresh_token: str | None = None
+    }
+
+    class TokenPayload {
+        sub: str | None = None
+        exp: int | None = None
+    }
+
+
+
+
+    class UserPreferencesUpdate {
+        dietary_preferences: list[str] | None = None
+        allergens: list[str] | None = None
+        nutrition_targets: dict[str, Any] | None = None
+    }
+
+    class UserUpdate {
+        email: str | None = None
+        password: str | None = None
+        first_name: str | None = None
+        last_name: str | None = None
+    }
+
+    class UserCreate {
+        email: str
+        first_name: str | None = None
+        last_name: str | None = None
+        is_active: bool | None = True
+        password: str
+    }
+
+    class UserResponse {
+        email: str
+        first_name: str | None = None
+        last_name: str | None = None
+        is_active: bool | None = True
+        id: str
+        created_at: datetime
+        dietary_preferences: list[str] | None = None
+        allergens: list[str] | None = None
+        nutrition_targets: dict[str, Any] | None = None
+    }
+
+    class UserBase {
+        email: str
+        first_name: str | None = None
+        last_name: str | None = None
+        is_active: bool | None = True
+    }
+
+    UserPreferencesUpdate ..> Any
+    UserResponse ..> Any
+    UserResponse ..> datetime
+

@@ -1,0 +1,58 @@
+classDiagram
+
+    class ImportedMealPlan {
+        meal_plan_id: str
+        name: str
+    }
+
+    class ImportedRecipe {
+        recipe_id: str
+        title: str
+    }
+
+    class ShoppingListItemBase {
+        ingredient_name: str
+        quantity: float | None = None
+        unit: str | None = None
+    }
+
+    class ShoppingListItemCreate {
+        ingredient_name: str
+        quantity: float | None = None
+        unit: str | None = None
+    }
+
+    class ShoppingListItemRead {
+        ingredient_name: str
+        quantity: float | None = None
+        unit: str | None = None
+        id: str
+        recipe_title: str | None = None
+        checked: bool | None = None
+        recipe_id: str | None = None
+        note: str | None = None
+        meal_plan_id: str | None = None
+        meal_plan_day: date | None = None
+        meal_plan_name: str | None = None
+        meal_type: MealType | None = None
+    }
+
+    class ShoppingListItemUpdate {
+        ingredient_name: str | None = None
+        quantity: float | None = None
+        unit: str | None = None
+        checked: bool | None = None
+    }
+
+    class ShoppingListRead {
+        items: list[ShoppingListItemRead]
+        imported_recipes: list[ImportedRecipe] = []
+        imported_meal_plans: list[ImportedMealPlan] = []
+    }
+
+    ShoppingListItemRead ..> MealType
+    ShoppingListItemRead ..> date
+    ShoppingListRead ..> ImportedMealPlan
+    ShoppingListRead ..> ImportedRecipe
+    ShoppingListRead ..> ShoppingListItemRead
+

@@ -1,0 +1,22 @@
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: black
+        name: black (local)
+        entry: poetry run black
+        language: system
+        types: [python]
+
+      - id: isort
+        name: isort (local)
+        entry: poetry run isort
+        language: system
+        types: [python]
+
+      - id: ruff
+        name: ruff (local)
+        entry: poetry
+        language: system
+        args: ["run", "ruff", "check"]
+        types: [python]

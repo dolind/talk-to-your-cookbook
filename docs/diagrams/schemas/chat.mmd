@@ -1,0 +1,68 @@
+classDiagram
+
+    class BaseMessage {
+        content: str | list[str | dict]
+        additional_kwargs: dict = dict
+        response_metadata: dict = dict
+        type: str
+        name: str | None = None
+        id: str | None = None
+    }
+
+    class ChatMessageBase {
+        content: str
+    }
+
+    class ChatMessageCreate {
+        content: str
+        recipe_id: str | None = None
+    }
+
+    class ChatMessageResponse {
+        content: str
+        id: str
+        session_id: str
+        role: MessageRole
+        created_at: datetime
+    }
+
+    class ChatSessionBase {
+        title: str | None = None
+        namespace: str | None = None
+    }
+
+    class ChatSessionCreate {
+        title: str | None = None
+        namespace: str | None = None
+    }
+
+    class ChatSessionListResponse {
+        items: list[ChatSessionResponse]
+        total: int
+        skip: int
+        limit: int
+    }
+
+    class ChatSessionResponse {
+        title: str | None = None
+        namespace: str | None = None
+        id: str
+        thread_id: str
+        created_at: datetime
+        messages: list[ChatMessageResponse] = []
+    }
+
+    class ChatState {
+        messages: list[BaseMessage]
+        selected_recipe_id: str | None
+        user_id: str
+    }
+
+    BaseMessage ..> dict
+    ChatMessageResponse ..> MessageRole
+    ChatMessageResponse ..> datetime
+    ChatSessionListResponse ..> ChatSessionResponse
+    ChatSessionResponse ..> ChatMessageResponse
+    ChatSessionResponse ..> datetime
+    ChatState ..> BaseMessage
+

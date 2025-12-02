@@ -1,0 +1,32 @@
+---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	check_grouping(check_grouping)
+	start_classification(start_classification)
+	thumbnail(thumbnail)
+	validate(validate)
+	interrupt_classification(interrupt_classification)
+	enrich_categories_tags(enrich_categories_tags)
+	interrupt_taxonomy(interrupt_taxonomy)
+	validate_or_merge_taxonomy(validate_or_merge_taxonomy)
+	approve_classification(approve_classification)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> check_grouping;
+	check_grouping --> start_classification;
+	check_grouping --> thumbnail;
+	enrich_categories_tags --> interrupt_taxonomy;
+	interrupt_classification --> validate;
+	interrupt_taxonomy --> validate_or_merge_taxonomy;
+	start_classification --> validate;
+	thumbnail --> validate;
+	validate -. &nbsp;to_taxonomy&nbsp; .-> enrich_categories_tags;
+	validate -. &nbsp;to_user_confirmation&nbsp; .-> interrupt_classification;
+	validate_or_merge_taxonomy --> approve_classification;
+	approve_classification --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc

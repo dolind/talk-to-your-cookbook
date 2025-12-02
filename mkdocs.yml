@@ -1,0 +1,42 @@
+site_name: Talk To Your Cookbook Living Documentation
+nav:
+  - Home: index.md
+  - Usage: usage.md
+  - AI Capabilities:
+    - Retrieval & Chat (RAG): rag.md
+    - OCR: ocr.md
+    - Evaluation Plan: evaluation.md
+  - Architecture:
+      - High-Level: architecture.md
+      - Components: components.md
+      - Embedding Pipeline: embeddings.md
+      - Database: database.md
+  - Docs Automation:
+      - Pydantic Schemas: schemas.md
+      - Entity Relationship: er.md
+      - OpenAPI (ReDoc): openapi.html
+      - raw openapi.json: openapi.json
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.expand
+    - content.code.copy
+    - diagrams
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences:
+      custom_fences:
+              - name: mermaid
+                class: mermaid
+  - pymdownx.details
+  - markdown_include.include:
+      base_path: docs
+extra_css: []
+extra_javascript:
+  - js/mermaid-config.js

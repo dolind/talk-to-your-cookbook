@@ -1,0 +1,34 @@
+classDiagram
+
+    class BookScanRead {
+        title: str
+        id: str
+        imageIds: list[str] | None = None
+    }
+
+    class PageScanRead {
+        filename: str
+        bookScanID: str
+        id: str
+        page_number: int
+        scanDate: datetime
+        ocr_path: str | None = None
+        title: str | None = None
+        page_segments: list[SegmentationSegment] | None = None
+        segmentation_done: bool | None = False
+        page_type: PageType | None = None
+        status: PageStatus | None = PageStatus.QUEUED
+    }
+
+    class SegmentationSegment {
+        id: int
+        title: str
+        bounding_boxes: list[list[dict[str, int]]]
+        associated_ocr_blocks: list[int]
+    }
+
+    PageScanRead ..> PageStatus
+    PageScanRead ..> PageType
+    PageScanRead ..> SegmentationSegment
+    PageScanRead ..> datetime
+
