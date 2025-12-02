@@ -1,0 +1,72 @@
+name: Backend CI
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "backend/**"
+      - "pyproject.toml"
+      - ".github/workflows/backend.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - "pyproject.toml"
+
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install Poetry
+        uses: abatilo/actions-poetry@v3
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run lint (ruff)
+        run: poetry run ruff check backend/app/
+
+      - name: Run format check (black + isort)
+        run: |
+          poetry run black --check backend/app/
+          poetry run isort --check-only backend/app/
+
+      - name: Run tests with coverage
+        run:  make test-ci
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage.xml
+          path: coverage.xml
+
+      - name: Generate coverage badge
+        if: github.ref == 'refs/heads/main'
+        uses: tj-actions/coverage-badge-py@v2
+        with:
+          path: coverage.xml
+          output: coverage.svg
+
+      - name: Push coverage badge to coverage branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && github.repository == 'dolind/talk-to-your-cookbook'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: coverage
+          create_branch: true
+          file_pattern: coverage.svg
+          commit_message: "Update coverage badge"
+          push_options: --force
+
