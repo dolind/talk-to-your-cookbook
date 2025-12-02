@@ -1,0 +1,10 @@
+/frontend/node_modules/
+/poetry.lock
+/poetry.toml
+/.env
+.env.prod
+.env.dev
+.coverage
+/site/**
+/.idea/**
+**_pycache__**
